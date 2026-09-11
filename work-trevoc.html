@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trevoc — Kashish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stone:#DBD5C7; --stone-deep:#CFC8B6; --ink:#1C1B18; --ink-soft:#514E45;
+    --brass:#A9834F; --paper:#EFEBE0; --line: rgba(28,27,24,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:#F3F0E8;
+    color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.5; overflow-x:hidden;
+  }
+  .serif{ font-family:'Fraunces', serif; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--brass); color:var(--paper); }
+  .grain{ position:fixed; inset:-10%; z-index:200; pointer-events:none; width:120%; height:120%; opacity:0.05; mix-blend-mode:overlay; }
+
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 40px; mix-blend-mode:difference; color:#fff;
+  }
+  header::before{ content:""; position:absolute; inset:0; backdrop-filter:blur(6px); mix-blend-mode:normal; -webkit-mask-image:linear-gradient(#000, transparent); z-index:-1; }
+  header .name{ font-family:'Fraunces', serif; font-size:18px; }
+  header nav{ display:flex; gap:32px; font-size:14px; }
+  header nav a{ opacity:.85; }
+  header nav a:hover{ opacity:1; }
+
+  /* ---- HERO ---- */
+  .hero{ height:100svh; position:relative; display:flex; align-items:flex-end; padding:0 40px 56px; overflow:hidden; }
+  .hero-art{
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse 90% 70% at 25% 10%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%);
+  }
+  .hero-art::after{ content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(15,13,10,.75) 0%, rgba(15,13,10,.15) 55%, rgba(15,13,10,.4) 100%); }
+  .hero-content{ position:relative; z-index:2; color:#f2ede0; max-width:1260px; margin:0 auto; width:100%; }
+  .hero-eyebrow{ font-size:14px; opacity:.85; margin-bottom:14px; }
+  .hero h1{ font-size:clamp(44px,8vw,120px); font-weight:400; line-height:0.95; }
+  .hero-tags{ display:flex; gap:14px; margin-top:24px; font-size:13px; opacity:.85; flex-wrap:wrap; }
+  .hero-tags span:not(:last-child)::after{ content:"·"; margin-left:14px; opacity:.6; }
+
+  .section-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:0 40px; max-width:1260px; margin:0 auto; border-top:1px solid var(--line); padding-top:20px;
+  }
+  .section-head h2{ font-size:15px; font-weight:500; }
+  .section-head span{ font-size:14px; color:var(--ink-soft); }
+
+  /* ---- CONTEXT ---- */
+  .context{ padding:90px 40px 70px; max-width:1260px; margin:0 auto; }
+  .context-head{ max-width:60ch; margin-bottom:56px; }
+  .context-head p.eyebrow{ font-size:14px; color:var(--ink-soft); margin-bottom:14px; }
+  .context-head h3{ font-family:'Fraunces', serif; font-size:clamp(28px,4vw,46px); font-weight:400; }
+  .context-body{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:70px; align-items:center; }
+  .context-blocks{ display:flex; flex-direction:column; gap:36px; }
+  .cb h4{ font-size:14px; font-weight:600; margin-bottom:10px; }
+  .cb p{ font-size:15px; color:var(--ink-soft); max-width:44ch; }
+  .context-figure{ position:relative; }
+  .context-figure svg{ position:absolute; inset:-14% ; z-index:0; opacity:.7; pointer-events:none; }
+  .context-figure .fig{
+    position:relative; z-index:1; aspect-ratio:4/5; border-radius:2px; overflow:hidden;
+    background: radial-gradient(ellipse 90% 70% at 25% 10%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%);
+    box-shadow:0 30px 60px -26px rgba(20,18,14,.45);
+  }
+
+  /* ---- INSPIRATION ---- */
+  .inspiration{ padding:100px 40px; }
+  .insp-wrap{ max-width:1260px; margin:40px auto 0; }
+  .insp-intro{ max-width:60ch; color:var(--ink-soft); margin-bottom:40px; font-size:16px; }
+  .moodboard{ display:grid; grid-template-columns:repeat(6,1fr); grid-auto-rows:100px; gap:10px; }
+  .mb-tile{ border-radius:2px; box-shadow:0 14px 30px -18px rgba(20,18,14,.4); position:relative; overflow:hidden; }
+  .mb-tile::after{ content:""; position:absolute; inset:0; background:radial-gradient(ellipse 100% 60% at 20% 0%, rgba(255,255,255,.16), transparent 55%); }
+  .mb-tile.w2{ grid-column:span 2; } .mb-tile.h2{ grid-row:span 2; }
+
+  /* ---- APPROACH ---- */
+  .approach{ padding:100px 40px; }
+  .approach-grid{ max-width:1260px; margin:40px auto 0; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }
+  .approach-card{ background:var(--stone); padding:36px 30px; }
+  .approach-card .num{ font-size:13px; color:var(--brass); margin-bottom:16px; display:block; }
+  .approach-card h4{ font-family:'Fraunces', serif; font-size:22px; font-weight:400; margin-bottom:12px; }
+  .approach-card p{ font-size:14px; color:var(--ink-soft); }
+
+  /* ---- EXECUTION (the volume section) ---- */
+  .execution{ padding:100px 40px 60px; }
+  .exec-mosaic{ max-width:1260px; margin:40px auto 0; display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .ex-tile{ border-radius:2px; aspect-ratio:4/5; position:relative; overflow:hidden; box-shadow:0 18px 40px -22px rgba(20,18,14,.5); transition:transform .5s cubic-bezier(.16,.8,.24,1); }
+  .ex-tile:hover{ transform:translateY(-5px); }
+  .ex-tile::after{ content:""; position:absolute; inset:0; background:radial-gradient(ellipse 100% 60% at 20% 0%, rgba(255,255,255,.18), transparent 55%); }
+  .ex-tile.big{ grid-column:span 2; grid-row:span 2; aspect-ratio:auto; }
+  .ex-cap{ position:absolute; bottom:0; left:0; right:0; padding:14px; font-size:12px; color:#f2ede0; z-index:2; background:linear-gradient(0deg, rgba(0,0,0,.55), transparent); }
+  .exec-note{ max-width:1260px; margin:24px auto 0; padding:0 0; font-size:13px; color:var(--ink-soft); }
+
+  /* ---- SYSTEM (format adaptation) ---- */
+  .system{ padding:100px 40px; }
+  .format-row{ max-width:1260px; margin:40px auto 0; display:grid; grid-template-columns:1.6fr 1fr 1fr; gap:20px; align-items:end; }
+  .fmt{ position:relative; border-radius:2px; overflow:hidden; box-shadow:0 18px 40px -22px rgba(20,18,14,.5); }
+  .fmt::after{ content:""; position:absolute; inset:0; background:radial-gradient(ellipse 100% 60% at 20% 0%, rgba(255,255,255,.18), transparent 55%); }
+  .fmt-wide{ aspect-ratio:16/9; }
+  .fmt-square{ aspect-ratio:1/1; }
+  .fmt-tall{ aspect-ratio:9/16; }
+  .fmt-label{ text-align:center; font-size:12px; color:var(--ink-soft); margin-top:10px; }
+
+  /* ---- RESULT ---- */
+  .result{ padding:100px 40px 60px; }
+  .result-stats{ max-width:1260px; margin:40px auto 0; display:grid; grid-template-columns:repeat(4,1fr); gap:0; border-top:1px solid var(--line); }
+  .stat{ padding:30px 0; border-bottom:1px solid var(--line); }
+  .stat:not(:last-child){ border-right:1px solid var(--line); padding-right:20px; }
+  .stat .n{ font-family:'Fraunces', serif; font-size:44px; color:var(--brass); }
+  .stat .l{ font-size:13px; color:var(--ink-soft); margin-top:6px; }
+  .result-note{ max-width:70ch; margin:30px auto 0; padding:0 0; font-size:15px; color:var(--ink-soft); }
+
+  /* ---- NEXT ---- */
+  .next{ padding:100px 40px 60px; }
+  .next-link{ max-width:1260px; margin:24px auto 0; display:flex; justify-content:space-between; align-items:center; padding:36px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .next-link .l1{ font-size:13px; color:var(--ink-soft); margin-bottom:8px; }
+  .next-link .l2{ font-family:'Fraunces', serif; font-size:34px; transition:transform .5s cubic-bezier(.16,.8,.24,1); }
+  .next-link:hover .l2{ transform:translateX(10px); color:var(--brass); }
+  .next-link .arrow{ font-size:24px; color:var(--brass); }
+
+  footer{ background:var(--ink); color:var(--paper); padding:60px 40px 30px; }
+  .foot-bottom{ max-width:1260px; margin:0 auto; display:flex; justify-content:space-between; font-size:13px; color:rgba(239,235,224,.6); }
+
+  @media (max-width:760px){
+    header{ padding:20px; }
+    .hero{ padding:0 20px 40px; }
+    .section-head, .context, .insp-wrap, .approach-grid, .exec-mosaic, .format-row, .result-stats, .next-link{ padding-left:20px; padding-right:20px; }
+    .context{ padding:60px 20px 40px; }
+    .context-body{ grid-template-columns:1fr; gap:36px; }
+    .moodboard{ grid-template-columns:repeat(3,1fr); grid-auto-rows:80px; }
+    .approach-grid{ grid-template-columns:1fr; }
+    .exec-mosaic{ grid-template-columns:repeat(2,1fr); }
+    .ex-tile.big{ grid-column:span 2; grid-row:span 1; aspect-ratio:16/10; }
+    .format-row{ grid-template-columns:1fr; }
+    .result-stats{ grid-template-columns:1fr 1fr; }
+    .stat:nth-child(odd){ border-right:1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <filter id="grainFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0"/>
+  </filter>
+</svg>
+<div class="grain" style="filter:url(#grainFilter); background:#000;"></div>
+
+<header>
+  <div class="name">Kashish</div>
+  <nav>
+    <a href="kashish-portfolio-concept.html#work">All Work</a>
+    <a href="kashish-portfolio-concept.html#about">About</a>
+    <a href="kashish-portfolio-concept.html#contact">Résumé ↗</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-art"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Case Study 01</p>
+    <h1 class="serif">Trevoc</h1>
+    <div class="hero-tags">
+      <span>Ultra-luxury high-rise, Sector 56, Gurugram</span>
+      <span>Digital / Motion / Social</span>
+      <span>2024</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-head">
+  <h2>The Brief</h2>
+  <span>590 assets across the engagement</span>
+</div>
+
+<section class="context">
+  <div class="context-head">
+    <p class="eyebrow">Client — Trevoc, Gurugram · Role — Graphic Designer · 2024</p>
+    <h3 class="serif">One brand, one identity, every week — without it ever feeling rushed.</h3>
+  </div>
+  <div class="context-body">
+    <div class="context-blocks">
+      <div class="cb">
+        <h4>Project goal</h4>
+        <p>Continuous digital presence for an ultra-luxury launch: celebrity brand-ambassador work, a daily SVS grid, investor EDMs, and internal HR comms — all reading as one coherent brand.</p>
+      </div>
+      <div class="cb">
+        <h4>Design decision</h4>
+        <p>A modular system built for velocity rather than a single hero campaign — fixed type and negative space, imagery and format doing the differentiation week to week.</p>
+      </div>
+    </div>
+    <div class="context-figure">
+      <svg viewBox="0 0 400 500"><circle cx="200" cy="250" r="230" fill="none" stroke="#1C1B18" stroke-width="1" opacity="0.15"/><circle cx="60" cy="90" r="50" fill="none" stroke="#A9834F" stroke-width="1" opacity="0.4"/></svg>
+      <div class="fig"></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-head">
+  <h2>Inspiration</h2>
+  <span>Reference &amp; direction</span>
+</div>
+
+<section class="inspiration">
+  <div class="insp-wrap">
+    <p class="insp-intro">Reference points for Trevoc, in place of a scanned moodboard — swap for the actual reference set: OTT/streaming title-card aesthetics for the "Retiring" teaser series, celebrity-endorsement print campaigns for tone, and luxury real estate grid design (Sotheby's / Trump-tier developer marketing) for restraint and material confidence.</p>
+    <div class="moodboard">
+      <div class="mb-tile w2 h2 art-trevoc" style="background:radial-gradient(ellipse 90% 70% at 25% 15%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%);"></div>
+      <div class="mb-tile" style="background:linear-gradient(200deg,#2a2015,#8a6a3a);"></div>
+      <div class="mb-tile" style="background:linear-gradient(200deg,#171410,#5c4626);"></div>
+      <div class="mb-tile w2" style="background:linear-gradient(115deg,#221c14,#7c5c30);"></div>
+      <div class="mb-tile h2" style="background:linear-gradient(180deg,#0f0d0a,#4a381e);"></div>
+      <div class="mb-tile" style="background:linear-gradient(200deg,#2e2416,#9a7a45);"></div>
+      <div class="mb-tile w2" style="background:linear-gradient(115deg,#191510,#684f29);"></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-head">
+  <h2>Approach</h2>
+  <span>Design decisions</span>
+</div>
+
+<section class="approach">
+  <div class="approach-grid">
+    <div class="approach-card">
+      <span class="num serif">01</span>
+      <h4 class="serif">A repeatable grid, not a repeated layout</h4>
+      <p>Built a modular composition system so 9-tile SVS grids could vary week to week while staying recognisably Trevoc — type position and negative space held constant, imagery rotated.</p>
+    </div>
+    <div class="approach-card">
+      <span class="num serif">02</span>
+      <h4 class="serif">Type as the brand anchor</h4>
+      <p>With imagery changing constantly, a fixed typographic system — one display face, tight tracking, gold foil-adjacent accent — carried brand recognition across every touchpoint.</p>
+    </div>
+    <div class="approach-card">
+      <span class="num serif">03</span>
+      <h4 class="serif">Design for the format first</h4>
+      <p>Every key visual was built with its 1:1, 9:16, and 16:9 crops considered from the first draft, not adapted afterward — visible in the System section below.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-head">
+  <h2>Execution</h2>
+  <span>Selected output — 590 total</span>
+</div>
+
+<section class="execution">
+  <div class="exec-mosaic">
+    <div class="ex-tile big" style="background:radial-gradient(ellipse 90% 70% at 25% 10%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%);"><div class="ex-cap">Celebrity ambassador key visual</div></div>
+    <div class="ex-tile" style="background:linear-gradient(200deg,#211a11,#7d5e30);"><div class="ex-cap">SVS grid tile — 03/09</div></div>
+    <div class="ex-tile" style="background:linear-gradient(200deg,#181310,#5e4527);"><div class="ex-cap">Investor EDM — August</div></div>
+    <div class="ex-tile" style="background:linear-gradient(200deg,#241d13,#8c6c3a);"><div class="ex-cap">OTT-style teaser card</div></div>
+    <div class="ex-tile" style="background:linear-gradient(200deg,#1a150f,#6a5029);"><div class="ex-cap">HR — new joiner comms</div></div>
+    <div class="ex-tile" style="background:linear-gradient(200deg,#1e1712,#77592e);"><div class="ex-cap">Website hero banner</div></div>
+    <div class="ex-tile" style="background:linear-gradient(200deg,#221b12,#84643a);"><div class="ex-cap">Blog cover — sample flat unveil</div></div>
+  </div>
+  <p class="exec-note">Seven tiles shown as a representative sample. The full page pulls FEATURE + top SUPPORTING assets for this campaign directly from the inventory, grouped by sub-series (Celebrity, SVS Grid, EDM, HR, Web) rather than dumped in one undifferentiated wall.</p>
+</section>
+
+<div class="section-head">
+  <h2>System</h2>
+  <span>One key visual, three formats</span>
+</div>
+
+<section class="system">
+  <div class="format-row">
+    <div>
+      <div class="fmt fmt-wide" style="background:radial-gradient(ellipse 90% 70% at 25% 10%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%);"></div>
+      <p class="fmt-label">16:9 — Website hero / YouTube</p>
+    </div>
+    <div>
+      <div class="fmt fmt-square" style="background:radial-gradient(ellipse 90% 70% at 25% 10%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%);"></div>
+      <p class="fmt-label">1:1 — Instagram grid</p>
+    </div>
+    <div>
+      <div class="fmt fmt-tall" style="background:radial-gradient(ellipse 90% 70% at 25% 10%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%);"></div>
+      <p class="fmt-label">9:16 — Stories / Reels</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-head">
+  <h2>Result</h2>
+  <span>Verified only</span>
+</div>
+
+<section class="result">
+  <div class="result-stats">
+    <div class="stat"><p class="n serif">590</p><p class="l">Assets delivered</p></div>
+    <div class="stat"><p class="n serif">7</p><p class="l">Sub-campaigns across the engagement</p></div>
+    <div class="stat"><p class="n serif">3</p><p class="l">Formats designed per key visual</p></div>
+    <div class="stat"><p class="n serif">4</p><p class="l">Months, continuous delivery</p></div>
+  </div>
+  <p class="result-note">Campaign delivered across social, EDM, web, and internal-comms touchpoints as part of Propacity's ongoing Trevoc engagement. No performance metrics are claimed here that aren't independently verifiable — swap this note for real figures only if Trevoc/Propacity can confirm them.</p>
+</section>
+
+<section class="next">
+  <a class="next-link" href="kashish-portfolio-concept.html#work">
+    <div>
+      <p class="l1">Next case study</p>
+      <p class="l2 serif">Indus Valley →</p>
+    </div>
+    <span class="arrow">↗</span>
+  </a>
+</section>
+
+<footer>
+  <div class="foot-bottom">
+    <span>Kashish — Graphic Designer</span>
+    <span>Case Study 01 / 05</span>
+  </div>
+</footer>
+
+</body>
+</html>

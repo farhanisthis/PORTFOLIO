@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>All Work — Kashish</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stone:#DBD5C7; --stone-deep:#CFC8B6; --ink:#1C1B18; --ink-soft:#514E45;
+    --brass:#A9834F; --paper:#EFEBE0; --line: rgba(28,27,24,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:#F3F0E8;
+    color:var(--ink); font-family:'IBM Plex Sans', sans-serif; line-height:1.5;
+  }
+  .serif{ font-family:'Fraunces', serif; }
+  a{ color:inherit; text-decoration:none; }
+  .grain{ position:fixed; inset:-10%; z-index:200; pointer-events:none; width:120%; height:120%; opacity:0.05; mix-blend-mode:overlay; }
+
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 40px; mix-blend-mode:difference; color:#fff;
+  }
+  header::before{ content:""; position:absolute; inset:0; backdrop-filter:blur(6px); mix-blend-mode:normal; -webkit-mask-image:linear-gradient(#000, transparent); z-index:-1; }
+  header .name{ font-family:'Fraunces', serif; font-size:18px; }
+  header nav{ display:flex; gap:32px; font-size:14px; }
+
+  .top{ padding:140px 40px 40px; max-width:1260px; margin:0 auto; }
+  .top h1{ font-size:clamp(36px,6vw,72px); font-weight:400; max-width:14ch; }
+  .top p{ color:var(--ink-soft); max-width:56ch; margin-top:18px; }
+
+  .filters{ display:flex; gap:10px; flex-wrap:wrap; padding:30px 40px; max-width:1260px; margin:0 auto; border-top:1px solid var(--line); }
+  .filter-btn{
+    padding:9px 18px; border:1px solid var(--line); border-radius:999px; font-size:13px;
+    cursor:pointer; background:transparent; color:var(--ink-soft); transition:all .3s ease;
+  }
+  .filter-btn.active, .filter-btn:hover{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+
+  .grid{ max-width:1260px; margin:0 auto; padding:20px 40px 100px; display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .g-tile{
+    position:relative; overflow:hidden; border-radius:2px; aspect-ratio:4/5;
+    box-shadow:0 18px 40px -22px rgba(20,18,14,.5);
+    transition:transform .5s cubic-bezier(.16,.8,.24,1), opacity .3s ease;
+  }
+  .g-tile:hover{ transform:translateY(-5px); }
+  .g-tile::after{ content:""; position:absolute; inset:0; background:radial-gradient(ellipse 100% 60% at 20% 0%, rgba(255,255,255,.18), transparent 55%); }
+  .g-cap{ position:absolute; bottom:0; left:0; right:0; padding:14px; z-index:2; color:#f2ede0; font-size:12px; background:linear-gradient(0deg, rgba(0,0,0,.55), transparent); }
+  .g-cap .n{ font-family:'Fraunces', serif; font-size:15px; display:block; margin-bottom:2px; }
+  .g-tile.hidden{ display:none; }
+
+  .stats-bar{ max-width:1260px; margin:0 auto; padding:0 40px 100px; display:grid; grid-template-columns:repeat(5,1fr); border-top:1px solid var(--line); }
+  .stats-bar div{ padding:28px 20px 0; border-right:1px solid var(--line); }
+  .stats-bar div:last-child{ border-right:none; }
+  .stats-bar .n{ font-family:'Fraunces', serif; font-size:36px; color:var(--brass); }
+  .stats-bar .l{ font-size:12px; color:var(--ink-soft); margin-top:4px; }
+
+  footer{ background:var(--ink); color:var(--paper); padding:50px 40px; text-align:center; font-size:13px; }
+
+  @media (max-width:760px){
+    .top, .filters, .grid, .stats-bar{ padding-left:20px; padding-right:20px; }
+    .grid{ grid-template-columns:repeat(2,1fr); }
+    .stats-bar{ grid-template-columns:repeat(2,1fr); }
+    .stats-bar div{ border-right:none; border-bottom:1px solid var(--line); padding-bottom:16px; margin-bottom:12px;}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <filter id="grainFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/><feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0"/></filter>
+</svg>
+<div class="grain" style="filter:url(#grainFilter); background:#000;"></div>
+
+<header>
+  <div class="name">Kashish</div>
+  <nav>
+    <a href="kashish-portfolio-concept.html#work">Work</a>
+    <a href="kashish-portfolio-concept.html#about">About</a>
+    <a href="kashish-portfolio-concept.html#contact">Résumé ↗</a>
+  </nav>
+</header>
+
+<section class="top">
+  <h1 class="serif">All Work</h1>
+  <p>Two years of agency output across eleven real-estate and lifestyle clients — 2,421 deliverables, shown here by discipline. This page is the range; the five case studies are the depth.</p>
+</section>
+
+<div class="filters" id="filters">
+  <button class="filter-btn active" data-cat="all">All</button>
+  <button class="filter-btn" data-cat="social">Social — 694</button>
+  <button class="filter-btn" data-cat="edm">EDM — 674</button>
+  <button class="filter-btn" data-cat="grid">Grid / SVS — 433</button>
+  <button class="filter-btn" data-cat="motion">Motion — 389</button>
+  <button class="filter-btn" data-cat="print">Print / Signage — 79</button>
+  <button class="filter-btn" data-cat="corp">HR / Corporate — 77</button>
+  <button class="filter-btn" data-cat="brand">Brand / Identity — 15</button>
+</div>
+
+<div class="grid" id="grid">
+  <!-- tiles generated by script from a representative sample per category -->
+</div>
+
+<div class="stats-bar">
+  <div><p class="n serif">2,421</p><p class="l">Total creative deliverables</p></div>
+  <div><p class="n serif">34</p><p class="l">Campaign groups</p></div>
+  <div><p class="n serif">11</p><p class="l">Client brands</p></div>
+  <div><p class="n serif">4</p><p class="l">Months, single internship</p></div>
+  <div><p class="n serif">3</p><p class="l">Formats per key visual, typical</p></div>
+</div>
+
+<footer>Kashish — Graphic Designer · New Delhi</footer>
+
+<script>
+  const categories = [
+    {key:'social', label:'Social Media Post', count:694, hues:['#7c5c30','#8a6a3a','#684f29']},
+    {key:'edm', label:'EDM / Email Banner', count:674, hues:['#5e4527','#77592e','#6b4f2b']},
+    {key:'grid', label:'Grid / SVS Grid', count:433, hues:['#3f4f39','#4c5e46','#556b4d']},
+    {key:'motion', label:'Motion / Video', count:389, hues:['#2d4258','#38506b','#3a566f']},
+    {key:'print', label:'Print / Signage', count:79, hues:['#5c2622','#6e2f2a','#7a3630']},
+    {key:'corp', label:'HR / Corporate', count:77, hues:['#4a381e','#5c4626','#6a5029']},
+    {key:'brand', label:'Brand / Identity', count:15, hues:['#816332','#9a7a45','#8c6c3a']},
+  ];
+
+  const grid = document.getElementById('grid');
+  let html = '';
+  categories.forEach(cat => {
+    // representative sample tiles per category — swap for real assets, one tile per actual file
+    for(let i=0; i<6; i++){
+      const hue = cat.hues[i % cat.hues.length];
+      html += `<div class="g-tile" data-cat="${cat.key}" style="background:linear-gradient(200deg,#191510,${hue});">
+        <div class="g-cap"><span class="n serif">${cat.label}</span>Sample ${i+1} of ${cat.count}</div>
+      </div>`;
+    }
+  });
+  grid.innerHTML = html;
+
+  const buttons = document.querySelectorAll('.filter-btn');
+  const tiles = document.querySelectorAll('.g-tile');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cat = btn.dataset.cat;
+      tiles.forEach(t => {
+        t.classList.toggle('hidden', cat !== 'all' && t.dataset.cat !== cat);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>

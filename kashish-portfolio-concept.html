@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kashish — Graphic Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --stone:#DBD5C7;
+    --stone-deep:#CFC8B6;
+    --ink:#1C1B18;
+    --ink-soft:#514E45;
+    --brass:#A9834F;
+    --paper:#EFEBE0;
+    --line: rgba(28,27,24,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:#F3F0E8;
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.5;
+    overflow-x:hidden;
+    position:relative;
+  }
+  /* film grain — fixed, subtle, sits above everything */
+  .grain{
+    position:fixed; inset:-10%; z-index:200; pointer-events:none;
+    width:120%; height:120%;
+    opacity:0.05;
+    mix-blend-mode:overlay;
+  }
+  .serif{ font-family:'Fraunces', serif; }
+  a{ color:inherit; text-decoration:none; }
+  ::selection{ background:var(--brass); color:var(--paper); }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:22px 40px;
+    mix-blend-mode:difference;
+    color:#fff;
+  }
+  header::before{
+    content:""; position:absolute; inset:0;
+    backdrop-filter:blur(6px);
+    mix-blend-mode:normal;
+    -webkit-mask-image:linear-gradient(#000, transparent);
+    z-index:-1;
+  }
+  header .name{ font-family:'Fraunces', serif; font-size:18px; letter-spacing:0.02em; }
+  header nav{ display:flex; gap:32px; font-size:14px; }
+  header nav a{ opacity:0.85; transition:opacity .2s; }
+  header nav a:hover{ opacity:1; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    min-height:100svh;
+    display:flex; flex-direction:column; justify-content:center;
+    padding:0 40px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero-glow{
+    position:absolute; left:50%; top:42%; transform:translate(-50%,-50%);
+    width:min(1100px, 140vw); height:min(1100px, 140vw);
+    background:radial-gradient(circle, rgba(169,131,79,0.38) 0%, rgba(169,131,79,0.14) 40%, transparent 68%);
+    pointer-events:none; z-index:0;
+  }
+  .hero-rings{ position:absolute; inset:0; pointer-events:none; z-index:0; opacity:.5; }
+  .hero-inner{ max-width:1180px; margin:0 auto; width:100%; position:relative; z-index:1; text-align:center; }
+  .hero-eyebrow{
+    font-size:14px; color:var(--ink-soft); margin-bottom:22px;
+    opacity:0; transform:translateY(8px);
+    animation: rise .8s cubic-bezier(.2,.7,.2,1) forwards;
+    animation-delay:.15s;
+  }
+  .hero h1{
+    font-size:clamp(44px, 8.5vw, 130px);
+    font-weight:600;
+    line-height:0.96;
+    letter-spacing:-0.01em;
+  }
+  .hero h1 .line{ overflow:hidden; display:block; }
+  .hero h1 .line span{
+    display:block;
+    transform:translateY(110%);
+    animation: rise-line 1s cubic-bezier(.2,.75,.15,1) forwards;
+  }
+  .hero h1 .line:nth-child(1) span{ animation-delay:.05s; }
+  .hero h1 .line:nth-child(2) span{ animation-delay:.18s; }
+  .hero-role{
+    margin-top:26px; font-size:clamp(16px,2vw,22px); color:var(--ink-soft); font-style:italic;
+    font-family:'Fraunces', serif;
+    opacity:0; animation: rise .8s cubic-bezier(.2,.7,.2,1) forwards; animation-delay:.4s;
+  }
+
+  @keyframes rise{ to{ opacity:1; transform:translateY(0); } }
+  @keyframes rise-line{ to{ transform:translateY(0); } }
+
+  .hero-foot{
+    margin-top:60px; display:flex; justify-content:space-between; align-items:flex-end;
+    max-width:1180px; margin-left:auto; margin-right:auto;
+    padding-top:20px; position:relative; z-index:1;
+    opacity:0; animation: rise .8s cubic-bezier(.2,.7,.2,1) forwards; animation-delay:.6s;
+  }
+  .hero-foot p{ max-width:340px; font-size:15px; color:var(--ink-soft); text-align:left; }
+  .scroll-cue{ font-size:13px; color:var(--ink-soft); display:flex; align-items:center; gap:10px; }
+  .scroll-cue .dot{ width:6px; height:6px; border-radius:50%; background:var(--brass); animation:pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse{ 0%,100%{ transform:scale(1); opacity:1; } 50%{ transform:scale(1.6); opacity:.4; } }
+
+  /* ---------- SECTION LABEL ---------- */
+  .section-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    padding:0 40px; max-width:1260px; margin:0 auto;
+    border-top:1px solid var(--line);
+    padding-top:20px; margin-top:0;
+  }
+  .section-head h2{ font-size:15px; font-weight:500; }
+  .section-head span{ font-size:14px; color:var(--ink-soft); }
+
+  /* ---------- DIRECTORY / SELECTED WORK ---------- */
+  .directory{ padding:120px 0 60px; }
+  .directory-list{ max-width:1260px; margin:40px auto 0; padding:0 40px; }
+  .d-row{
+    display:grid;
+    grid-template-columns:64px 1fr 220px 160px 32px;
+    align-items:center;
+    gap:24px;
+    padding:26px 0;
+    border-top:1px solid var(--line);
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+  }
+  .directory-list .d-row:last-child{ border-bottom:1px solid var(--line); }
+  .d-row::before{
+    content:""; position:absolute; top:-1px; left:0; height:1px; width:0;
+    background:var(--brass);
+    box-shadow:0 0 8px 0 rgba(169,131,79,0.6);
+    transition:width .55s cubic-bezier(.16,.8,.24,1);
+  }
+  .d-row:hover::before{ width:100%; }
+  .d-num{ font-size:14px; color:var(--ink-soft); transition:color .45s cubic-bezier(.16,.8,.24,1); }
+  .d-name{ font-family:'Fraunces', serif; font-size:clamp(24px,3.2vw,42px); font-weight:400; transition:transform .55s cubic-bezier(.16,.8,.24,1), color .55s cubic-bezier(.16,.8,.24,1); }
+  .d-tag{ font-size:13px; color:var(--ink-soft); }
+  .d-count{ font-size:13px; color:var(--ink-soft); text-align:right; }
+  .d-arrow{ font-size:20px; transform:rotate(0deg) translateX(0); transition:transform .5s cubic-bezier(.16,.8,.24,1); color:var(--brass); }
+  .d-row:hover .d-name{ transform:translateX(14px); color:var(--brass); }
+  .d-row:hover .d-num{ color:var(--brass); }
+  .d-row:hover .d-arrow{ transform:translateX(6px) rotate(45deg); }
+
+  .d-preview{
+    position:fixed; top:0; left:0; pointer-events:none;
+    width:280px; height:360px; border-radius:2px; overflow:hidden;
+    opacity:0; transform:scale(.92) rotate(-1deg);
+    transition:opacity .45s cubic-bezier(.16,.8,.24,1), transform .45s cubic-bezier(.16,.8,.24,1);
+    z-index:50;
+    box-shadow:0 30px 60px -20px rgba(20,18,14,0.45), 0 8px 20px -8px rgba(20,18,14,0.3);
+  }
+  .d-preview.active{ opacity:1; transform:scale(1) rotate(0deg); }
+  .d-preview .art{ width:100%; height:100%; position:relative; }
+  .d-preview .art::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(115deg, rgba(255,255,255,.22) 0%, transparent 30%),
+               radial-gradient(ellipse at 30% 100%, rgba(0,0,0,.35), transparent 60%);
+  }
+
+  /* placeholder "campaign art" gradients standing in for real creative —
+     each carries a soft light source + grain-catching contrast range so it
+     reads as material rather than flat color */
+  .art-trevoc{ background: radial-gradient(ellipse 90% 70% at 25% 15%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%); }
+  .art-indus{ background: radial-gradient(ellipse 90% 70% at 25% 15%, #7c8f68, transparent 55%), linear-gradient(160deg,#171b17 0%, #3f4f39 55%, #a9b98f 100%); }
+  .art-kreeva{ background: radial-gradient(ellipse 90% 70% at 25% 15%, #a35c46, transparent 55%), linear-gradient(160deg,#1a1211 0%, #5c2622 55%, #c98a63 100%); }
+  .art-elevate{ background: radial-gradient(ellipse 90% 70% at 25% 15%, #5c7a95, transparent 55%), linear-gradient(160deg,#141a22 0%, #2d4258 55%, #9db4c6 100%); }
+  .art-eth{ background: radial-gradient(ellipse 90% 70% at 25% 15%, #b0925a, transparent 55%), linear-gradient(160deg,#1e1a11 0%, #6c5228 55%, #e3c98e 100%); }
+
+  /* ---------- HORIZONTAL RAIL ---------- */
+  .rail-section{ padding:100px 0 60px; }
+  .rail{
+    display:flex; gap:20px; overflow-x:auto; padding:40px 40px 20px;
+    scroll-snap-type:x mandatory;
+    -ms-overflow-style:none; scrollbar-width:none;
+  }
+  .rail::-webkit-scrollbar{ display:none; }
+  .rail-card{
+    flex:0 0 min(78vw, 460px); scroll-snap-align:start;
+    aspect-ratio:4/5;
+    border-radius:2px; position:relative; overflow:hidden;
+    display:flex; flex-direction:column; justify-content:flex-end;
+    padding:22px;
+    color:#f2ede0;
+    box-shadow:0 20px 50px -24px rgba(20,18,14,0.5);
+    transition:transform .6s cubic-bezier(.16,.8,.24,1);
+  }
+  .rail-card:hover{ transform:translateY(-6px); }
+  .rail-card::before{
+    content:""; position:absolute; inset:0; z-index:1;
+    background:radial-gradient(ellipse 100% 60% at 20% 0%, rgba(255,255,255,.18), transparent 55%);
+  }
+  .rail-card::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(0deg, rgba(0,0,0,.6) 0%, rgba(0,0,0,0) 50%);
+    box-shadow:inset 0 0 60px rgba(0,0,0,.25);
+  }
+  .rail-card .rc-label{ position:relative; z-index:2; font-size:13px; opacity:.85; }
+  .rail-card .rc-title{ position:relative; z-index:2; font-family:'Fraunces', serif; font-size:26px; margin-top:6px; }
+  .rail-hint{ padding:0 40px; font-size:13px; color:var(--ink-soft); }
+
+  /* ---------- CASE STUDY TEASER (scroll reveal) ---------- */
+  .case{
+    min-height:100vh;
+    display:flex; align-items:center;
+    padding:100px 40px;
+    position:relative;
+  }
+  .case-grid{
+    max-width:1260px; margin:0 auto; width:100%;
+    display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;
+  }
+  .case-visual{
+    aspect-ratio:3/4; border-radius:2px;
+    background: radial-gradient(ellipse 90% 70% at 25% 10%, #a8874f, transparent 55%), linear-gradient(160deg,#1c1812 0%, #6b4f2b 55%, #d8bd8a 100%);
+    box-shadow:0 40px 80px -30px rgba(20,18,14,0.5);
+    opacity:0; transform:translateY(50px) scale(.98);
+    transition:opacity 1.1s cubic-bezier(.16,.8,.24,1), transform 1.1s cubic-bezier(.16,.8,.24,1);
+  }
+  .case-text{ opacity:0; transform:translateY(40px); transition:opacity .9s cubic-bezier(.2,.7,.2,1) .12s, transform .9s cubic-bezier(.2,.7,.2,1) .12s; }
+  .case.in-view .case-visual{ opacity:1; transform:translateY(0) scale(1); }
+  .case.in-view .case-text{ opacity:1; transform:translateY(0); }
+  .case-eyebrow{ font-size:14px; color:var(--brass); margin-bottom:16px; }
+  .case-text h3{ font-family:'Fraunces', serif; font-size:clamp(30px,4vw,52px); font-weight:400; margin-bottom:24px; }
+  .case-text p{ color:var(--ink-soft); max-width:46ch; margin-bottom:14px; }
+  .case-meta{ display:flex; gap:32px; margin-top:32px; padding-top:24px; border-top:1px solid var(--line); }
+  .case-meta div p:first-child{ font-size:12px; color:var(--ink-soft); margin-bottom:4px; }
+  .case-meta div p:last-child{ font-size:14px; }
+
+  /* ---------- DATA / RANGE TABLE ---------- */
+  .range{ padding:60px 40px 120px; max-width:1260px; margin:0 auto; }
+  .range-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:0; margin-top:30px; border-top:1px solid var(--line); }
+  .range-row{ display:flex; justify-content:space-between; padding:16px 0; border-bottom:1px solid var(--line); font-size:15px; }
+  .range-row:nth-child(odd){ padding-right:30px; }
+  .range-row:nth-child(even){ padding-left:30px; }
+  .range-row span:last-child{ color:var(--ink-soft); }
+
+  /* ---------- ABOUT / CONTACT ---------- */
+  footer{
+    background:var(--ink); color:var(--paper);
+    padding:120px 40px 40px;
+  }
+  .foot-inner{ max-width:1260px; margin:0 auto; }
+  footer h3{ font-family:'Fraunces', serif; font-size:clamp(32px,5vw,64px); font-weight:400; max-width:16ch; margin-bottom:50px; }
+  .foot-links{ display:flex; gap:40px; flex-wrap:wrap; margin-bottom:80px; }
+  .foot-links a{ font-size:15px; border-bottom:1px solid rgba(239,235,224,.3); padding-bottom:4px; transition:border-color .2s; }
+  .foot-links a:hover{ border-color:var(--brass); }
+  .foot-bottom{ display:flex; justify-content:space-between; font-size:13px; color:rgba(239,235,224,.5); border-top:1px solid rgba(239,235,224,.15); padding-top:24px; }
+
+  @media (prefers-reduced-motion: reduce){
+    .hero h1 .line span{ animation:none; transform:none; }
+    .hero-eyebrow, .hero-foot{ animation:none; opacity:1; transform:none; }
+    .case-visual, .case-text{ transition:none; opacity:1; transform:none; }
+    .grain{ display:none; }
+  }
+
+  @media (max-width:760px){
+    header{ padding:20px; }
+    .hero{ padding:0 20px 48px; }
+    .section-head{ padding:0 20px; }
+    .directory-list{ padding:0 20px; }
+    .d-row{ grid-template-columns:32px 1fr 24px; }
+    .d-tag, .d-count{ display:none; }
+    .d-preview{ display:none; }
+    .case{ padding:70px 20px; }
+    .case-grid{ grid-template-columns:1fr; gap:30px; }
+    .range{ padding:40px 20px 80px; }
+    .range-grid{ grid-template-columns:1fr; }
+    .range-row:nth-child(even){ padding-left:0; }
+    footer{ padding:80px 20px 30px; }
+    .foot-bottom{ flex-direction:column; gap:10px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute">
+  <filter id="grainFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.9 0"/>
+  </filter>
+</svg>
+<div class="grain" style="filter:url(#grainFilter); background:#000;"></div>
+
+<header>
+  <div class="name">Kashish</div>
+  <nav>
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Résumé ↗</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-glow"></div>
+  <svg class="hero-rings" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid slice">
+    <circle cx="700" cy="420" r="260" fill="none" stroke="#1C1B18" stroke-width="1" opacity="0.18"/>
+    <circle cx="700" cy="420" r="380" fill="none" stroke="#1C1B18" stroke-width="1" opacity="0.1"/>
+    <circle cx="180" cy="120" r="90" fill="none" stroke="#A9834F" stroke-width="1" opacity="0.3"/>
+    <path d="M 1180 700 Q 1320 640 1260 500" fill="none" stroke="#1C1B18" stroke-width="1" opacity="0.15"/>
+  </svg>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Two years in luxury real-estate marketing</p>
+    <h1 class="serif">
+      <span class="line"><span>Kashish</span></span>
+      <span class="line"><span>Rajawat</span></span>
+    </h1>
+    <p class="hero-role">( Graphic Designer — Digital, Brand &amp; Motion )</p>
+  </div>
+  <div class="hero-foot">
+    <p>Design that sells a life before it's built — grids, EDMs, motion, and brand systems for luxury developments, built to launch fast and hold up close.</p>
+    <div class="scroll-cue"><span class="dot"></span>Scroll</div>
+  </div>
+</section>
+
+<div class="section-head" id="work">
+  <h2>Selected Work</h2>
+  <span>05 campaigns</span>
+</div>
+
+<section class="directory">
+  <div class="directory-list">
+    <div class="d-row" data-art="art-trevoc" onclick="window.location.href='work-trevoc.html'">
+      <span class="d-num">01</span>
+      <span class="d-name serif">Trevoc</span>
+      <span class="d-tag">Ultra-luxury high-rise, Gurugram</span>
+      <span class="d-count">590 assets</span>
+      <span class="d-arrow">↗</span>
+    </div>
+    <div class="d-row" data-art="art-indus" onclick="window.location.href='work-archive.html'">
+      <span class="d-num">02</span>
+      <span class="d-name serif">Indus Valley</span>
+      <span class="d-tag">Himalayan hill cottages &amp; villa plots</span>
+      <span class="d-count">303 assets</span>
+      <span class="d-arrow">↗</span>
+    </div>
+    <div class="d-row" data-art="art-kreeva" onclick="window.location.href='work-archive.html'">
+      <span class="d-num">03</span>
+      <span class="d-name serif">Kreeva</span>
+      <span class="d-tag">Bespoke ultra-luxury residences</span>
+      <span class="d-count">184 assets</span>
+      <span class="d-arrow">↗</span>
+    </div>
+    <div class="d-row" data-art="art-elevate" onclick="window.location.href='work-archive.html'">
+      <span class="d-num">04</span>
+      <span class="d-name serif">Elevate Vanya</span>
+      <span class="d-tag">Luxury residences, Dehradun</span>
+      <span class="d-count">142 assets</span>
+      <span class="d-arrow">↗</span>
+    </div>
+    <div class="d-row" data-art="art-eth" onclick="window.location.href='work-archive.html'">
+      <span class="d-num">05</span>
+      <span class="d-name serif">ETH Infra</span>
+      <span class="d-tag">Haridwar, Queensfield &amp; Rishikesh</span>
+      <span class="d-count">255 assets</span>
+      <span class="d-arrow">↗</span>
+    </div>
+  </div>
+  <div class="d-preview" id="preview"><div class="art"></div></div>
+</section>
+
+<div class="section-head">
+  <h2>Range</h2>
+  <span><a href="work-archive.html" style="color:var(--brass);">View all 2,421 →</a></span>
+</div>
+
+<section class="rail-section">
+  <div class="rail">
+    <div class="rail-card art-trevoc">
+      <p class="rc-label">Celebrity Campaign</p>
+      <p class="rc-title serif">Saif &amp; Kareena for Trevoc</p>
+    </div>
+    <div class="rail-card art-eth">
+      <p class="rc-label">Launch Suite</p>
+      <p class="rc-title serif">ETH Haridwar One</p>
+    </div>
+    <div class="rail-card art-indus">
+      <p class="rc-label">Motion / SVS Grid</p>
+      <p class="rc-title serif">Indus Valley Investor EDMs</p>
+    </div>
+    <div class="rail-card art-kreeva">
+      <p class="rc-label">Brand Narrative</p>
+      <p class="rc-title serif">Kreeva — Friendship Day</p>
+    </div>
+    <div class="rail-card art-elevate">
+      <p class="rc-label">Outdoor / Print</p>
+      <p class="rc-title serif">Elevate Vanya Hoarding</p>
+    </div>
+  </div>
+  <p class="rail-hint">Drag or scroll horizontally — one format-adaptation study per card, sized 1:1 → 9:16 → 16:9 in the full case study.</p>
+</section>
+
+<section class="case" id="case">
+  <div class="case-grid">
+    <div class="case-visual"></div>
+    <div class="case-text">
+      <p class="case-eyebrow">Case Study — 01</p>
+      <h3 class="serif">Trevoc: one visual identity, every format, every week.</h3>
+      <p>256 assets shipped in a single month across social, EDM, and web — without the brand ever feeling rushed. The challenge wasn't one great image; it was building a system disciplined enough to survive daily output.</p>
+      <p>This section is where the real case study replaces this placeholder: the brief, three or four key visuals at full size, and the format-adaptation grid (1:1 / 9:16 / 16:9) that the audit flagged as a genuine strength.</p>
+      <div class="case-meta">
+        <div><p>Role</p><p>Graphic Designer</p></div>
+        <div><p>Discipline</p><p>Digital / Campaign / Motion</p></div>
+        <div><p>Output</p><p>256 assets, Sept 2024</p></div>
+      </div>
+      <p style="margin-top:28px;"><a href="work-trevoc.html" style="color:var(--brass); font-size:14px; border-bottom:1px solid var(--brass); padding-bottom:2px;">View full case study ↗</a></p>
+    </div>
+  </div>
+</section>
+
+<div class="section-head">
+  <h2>Across the Archive</h2>
+  <span>2,421 deliverables</span>
+</div>
+
+<section class="range">
+  <div class="range-grid">
+    <div class="range-row"><span>Social Media Post</span><span>694 · 1:1, 4:5, 9:16</span></div>
+    <div class="range-row"><span>EDM / Email Banner</span><span>674 · mobile &amp; WhatsApp</span></div>
+    <div class="range-row"><span>Grid Cover / SVS Grid</span><span>433 · panoramic, 9-tile</span></div>
+    <div class="range-row"><span>Motion / Video</span><span>389 · reels, walkthroughs</span></div>
+    <div class="range-row"><span>Print / Signage</span><span>79 · standees, hoarding</span></div>
+    <div class="range-row"><span>HR / Internal Comms</span><span>77 · corporate identity</span></div>
+    <div class="range-row"><span>Website / Digital Banner</span><span>46 · hero composition</span></div>
+    <div class="range-row"><span>Brand Identity / Template</span><span>15 · modular systems</span></div>
+  </div>
+</section>
+
+<footer id="about">
+  <div class="foot-inner">
+    <h3 class="serif" id="contact">Let's talk about what you're building.</h3>
+    <div class="foot-links">
+      <a href="mailto:ksr2004it@gmail.com">Email ↗</a>
+      <a href="https://www.linkedin.com/in/kashish-rajawat-48a344294" target="_blank">LinkedIn ↗</a>
+      <a href="#">Résumé (PDF) ↗</a>
+    </div>
+    <div class="foot-bottom">
+      <span>Kashish — Graphic Designer</span>
+      <span>New Delhi, India</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Directory hover preview follows cursor
+  const preview = document.getElementById('preview');
+  const rows = document.querySelectorAll('.d-row');
+  rows.forEach(row => {
+    row.addEventListener('mouseenter', () => {
+      preview.querySelector('.art').className = 'art ' + row.dataset.art;
+      preview.classList.add('active');
+    });
+    row.addEventListener('mousemove', (e) => {
+      preview.style.left = (e.clientX + 24) + 'px';
+      preview.style.top = (e.clientY - 180) + 'px';
+    });
+    row.addEventListener('mouseleave', () => preview.classList.remove('active'));
+  });
+
+  // Case study scroll reveal
+  const caseSection = document.getElementById('case');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('in-view');
+    });
+  }, { threshold: 0.3 });
+  io.observe(caseSection);
+</script>
+
+</body>
+</html>

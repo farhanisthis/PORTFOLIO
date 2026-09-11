@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #080808;
+  --panel-1: #0F0F0F;
+  --panel-2: #141210;
+  --text-primary: #EDEAE2;
+  --text-secondary: #8E8A80;
+  --text-muted: #5A564F;
+  --champagne: #C6A87D;
+  --champagne-soft: #D4BC96;
+  --champagne-muted: rgba(198, 168, 125, 0.16);
+  --champagne-border: rgba(198, 168, 125, 0.24);
+  --kreeva-crimson: #8B1E2B;
+  --kreeva-dark: #4A0E16;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-ibm-plex-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+  scroll-behavior: auto; /* Lenis handles smooth scrolling */
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Typography Helpers */
+.font-serif {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+.font-sans {
+  font-family: var(--font-ibm-plex-sans), -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Custom Film Grain */
+.film-grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* Subtle Orbit Rings */
+.orbit-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--champagne-border);
+  pointer-events: none;
+  opacity: 0.18;
+}
+
+/* Restrained Glow */
+.subtle-glow {
+  background: radial-gradient(circle, rgba(198, 168, 125, 0.06) 0%, rgba(8, 8, 8, 0) 70%);
+}
+
+/* Private / Restricted Asset Treatment */
+.restricted-asset {
+  filter: grayscale(100%) blur(8px) contrast(85%);
+  transition: filter 0.4s ease;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}
